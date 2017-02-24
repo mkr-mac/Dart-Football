@@ -1,10 +1,11 @@
 """Dart Football for the Custom Electronic Board"""
 """Mickey McCargish - 2017"""
 
-import sys, pygame, random, os
+import sys, pygame, random, os, time
 from sound import Sound
 from image import Image
 from text import Text
+#import RPi.GPIO as GPIO
 
 def quit():
 	pygame.quit()
@@ -15,11 +16,26 @@ def draw(DS, scene):
 		obj.draw(DS)
 	pygame.display.update()
 
+def move_ball(yards, team_with_posession, home_team_initial_direction, half):
+	move = yards
+	if team_with_posession = 'away':
+		move = -move
+	return move
+
+def button_lookup(ports, input_ports, input_chart):
+	if len(ports) = 2:
+		port_1 = ports[0]
+		port_2 = ports[1]
+		
+		return input_chart(input_ports.index(ports[0]) + input_ports.index(ports[1]) * 10)
+	return False
+
 #Screen size constants
-SCREENWIDTH = 1080
-SCREENHEIGHT = 1620
+SCREENWIDTH = 800
+SCREENHEIGHT = 480
 FULLSCREEN = False
 led_font = 'advanced_led_board-7.ttf'
+current_milli_time = lambda: int(round(time.time() * 1000))
 
 #Start Pygame
 pygame.init()
@@ -31,7 +47,25 @@ else:
 	DS = pygame.display.set_mode((SCREENWIDTH, SCREENHEIGHT))
 
 pygame.display.set_caption("Dart Football")
+
+GPIO.setmode(GPIO.BCM)
+
+gpio_input_ports = [18, 23, 24, 25, 8, 7, 12, 16, 20, 21,
+					4, 17, 27, 11, 5, 6, 13, 19, 26]
+					
+for port in gpio_input_ports:
+	GPIO.setup(port, GPIO.IN, pull_up_down = GPIO.PUD_DOWN)
 	
+input_chart = [ 1, 5, 10, 'yellow', -1, -5, 'touchdown', 'fumble', 'interception', 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0 ,0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
+				
 """Initializing Variables"""
 #Team scores
 home_score = 0
@@ -39,7 +73,8 @@ away_score = 0
 #Current yardline
 yardline = 20
 #Posession indicator
-home_team_has_ball = False
+team_with_posession = 'home'
+home_team_initial_direction = 'right'
 ##Images Here????
 
 
@@ -69,8 +104,9 @@ away_team_name = ""
 score_to_get = 0
 
 ##IMAGES!!!!!?!?!?!?!
-background = Image('./Football_files/Jeilm8H.png', 0, 0)
-entry_text = Text("0", 30, 170, led_font, 165, (255,255,255))
+background = Image('./Football_files/Scoreboard_Small.png', 0, 0)
+current_yard_text = Text(posted_yardline, 670, 175, led_font, 54, (255,255,255))
+"""entry_text = Text("0", 30, 170, led_font, 165, (255,255,255))
 line_of_scrimmage = Image('./Football_files/los.png', 88, 462)
 first_down_line = Image('./Football_files/firstdown.png', 88, 462)
 posession_football = Image('./Football_files/football.png', 380, 1319)
@@ -85,7 +121,7 @@ breakaway_button = Image('./Football_files/breakaway.png', 330, 150, True, 'brea
 yard_entry_button = Image('./Football_files/yards.png', 20, 370, True, 'enter_yards')
 yellow_button = Image('./Football_files/yellow.png', 405, 350, True, 'yellow')
 miss_button = Image('./Football_files/offboard.png', 405, 350, True, 'offboard')
-
+"""
 base_scene = [
 				background, entry_text, line_of_scrimmage, first_down_line, posession_football,
 				touchdown_button, kick_button, punt_button, undo_button, fumble_button,
@@ -96,25 +132,32 @@ current_scene = base_scene
 
 draw(DS, current_scene)
 
-mouseclicked = False
+button_recently_clicked = False
+button_recently_clicked_time = 0
 
 while True:
-	for event in pygame.event.get():
-		if event.type == pygame.QUIT:
-			quit()
-		elif event.type == pygame.MOUSEMOTION:
-			mousex, mousey = event.pos
-		elif event.type == pygame.MOUSEBUTTONDOWN:
-			mouseclicked = True
-		elif event.type == pygame.MOUSEBUTTONUP:
-			mouseclicked = False
-
-	if mouseclicked == True:
-			for obj in current_scene:
-				if obj.clickable and obj.checkclick(mousex, mousey):
-					action = obj.action
-					if action == 'penalty':
-						quit()
-					entry_text.set_text(action)
-					draw(DS, current_scene)
+	ports_on = []
+	action = False
+	if not button_recently_clicked:
+		for port in gpio_input_ports:
+			if GPIO.input(port):
+				ports_on += [port]
 				
+		action = button_lookup(ports_on)
+	
+	else:
+		if current_milli_time() - button_recently_clicked_time > 600:
+			button_recently_clicked = False
+	
+	if action != False:
+		button_recently_clicked = True
+		button_recently_clicked_time = current_milli_time()
+		if action = int(action):
+			move_ball(action, team_with_posession, home_team_initial_direction, half)
+		if action = 'fumble':
+			if team_with_posession = 'home':
+				team_with_posession = 'away'
+			else:
+				team_with_posession = 'home'
+		
+		
