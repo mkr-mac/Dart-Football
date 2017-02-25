@@ -5,7 +5,7 @@ import sys, pygame, random, os, time
 from sound import Sound
 from image import Image
 from text import Text
-#import RPi.GPIO as GPIO
+import RPi.GPIO as GPIO
 
 def quit():
 	pygame.quit()
@@ -18,16 +18,15 @@ def draw(DS, scene):
 
 def move_ball(yards, team_with_posession, home_team_initial_direction, half):
 	move = yards
-	if team_with_posession = 'away':
+	if team_with_posession == 'away':
 		move = -move
 	return move
 
 def button_lookup(ports, input_ports, input_chart):
-	if len(ports) = 2:
+	if len(ports) == 2:
 		port_1 = ports[0]
 		port_2 = ports[1]
-		
-		return input_chart(input_ports.index(ports[0]) + input_ports.index(ports[1]) * 10)
+		return input_chart[input_ports.index(port_1) + (input_ports.index(port_2)-10)*10]
 	return False
 
 #Screen size constants
@@ -51,14 +50,14 @@ pygame.display.set_caption("Dart Football")
 GPIO.setmode(GPIO.BCM)
 
 gpio_input_ports = [18, 23, 24, 25, 8, 7, 12, 16, 20, 21,
-					4, 17, 27, 11, 5, 6, 13, 19, 26]
+			4, 17, 27, 11, 5, 6, 13, 19, 26]
 					
 for port in gpio_input_ports:
 	GPIO.setup(port, GPIO.IN, pull_up_down = GPIO.PUD_DOWN)
 	
-input_chart = [ 1, 5, 10, 'yellow', -1, -5, 'touchdown', 'fumble', 'interception', 0,
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+input_chart = [ 1, 5, 10, 0, 0, 0, 0, 0, 0, 0,
+				'yellow', -1, -5, 0, 0, 0, 0, 0, 0, 0,
+				'touchdown', 'fumble', 'interception', 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -105,9 +104,9 @@ score_to_get = 0
 
 ##IMAGES!!!!!?!?!?!?!
 background = Image('./Football_files/Scoreboard_Small.png', 0, 0)
-current_yard_text = Text(posted_yardline, 670, 175, led_font, 54, (255,255,255))
-"""entry_text = Text("0", 30, 170, led_font, 165, (255,255,255))
-line_of_scrimmage = Image('./Football_files/los.png', 88, 462)
+current_yard_text = Text(str(posted_yardline), 670, 175, led_font, 54, (255,255,255))
+entry_text = Text("0", 0, 0, led_font, 20, (255,255,255))
+"""line_of_scrimmage = Image('./Football_files/los.png', 88, 462)
 first_down_line = Image('./Football_files/firstdown.png', 88, 462)
 posession_football = Image('./Football_files/football.png', 380, 1319)
 touchdown_button = Image('./Football_files/3W26Hwh.png', 405, 150, True, 'touchdown')
@@ -122,11 +121,11 @@ yard_entry_button = Image('./Football_files/yards.png', 20, 370, True, 'enter_ya
 yellow_button = Image('./Football_files/yellow.png', 405, 350, True, 'yellow')
 miss_button = Image('./Football_files/offboard.png', 405, 350, True, 'offboard')
 """
-base_scene = [
-				background, entry_text, line_of_scrimmage, first_down_line, posession_football,
-				touchdown_button, kick_button, punt_button, undo_button, fumble_button,
-				interception_button, penalty_button, breakaway_button, yard_entry_button, yellow_button
-				]
+base_scene = [background, entry_text, current_yard_text]
+"""line_of_scrimmage, first_down_line, posession_football,
+touchdown_button, kick_button, punt_button, undo_button, fumble_button,
+interception_button, penalty_button, breakaway_button, yard_entry_button, yellow_button"""
+				
 
 current_scene = base_scene
 
@@ -143,7 +142,7 @@ while True:
 			if GPIO.input(port):
 				ports_on += [port]
 				
-		action = button_lookup(ports_on)
+		action = button_lookup(ports_on, gpio_input_ports, input_chart)
 	
 	else:
 		if current_milli_time() - button_recently_clicked_time > 600:
@@ -152,10 +151,11 @@ while True:
 	if action != False:
 		button_recently_clicked = True
 		button_recently_clicked_time = current_milli_time()
-		if action = int(action):
+		entry_text.set_text(str(action))
+		if str(action).isdigit():
 			move_ball(action, team_with_posession, home_team_initial_direction, half)
-		if action = 'fumble':
-			if team_with_posession = 'home':
+		if action == 'fumble':
+			if team_with_posession == 'home':
 				team_with_posession = 'away'
 			else:
 				team_with_posession = 'home'
