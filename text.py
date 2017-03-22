@@ -8,8 +8,8 @@ class Text:
 		self.y = y
 		self.c = 0
 		self.coords = (x, y)
-		self.text = text
-		self.length = len(self.text)
+		self.text = text.lower()
+		self.tlen = len(self.text)
 		self.size = size
 		self.font = pygame.font.Font(font, size)
 		
@@ -38,11 +38,11 @@ class Text:
 		self.calls+=1
 		if not self.calls%30 and self.scrolling:
 			self.c+=1
-			if self.c == self.length:
+			if self.c == self.tlen:
 				self.c = 0
 		i = 0
 		le = self.c
-		while ((i+.7)*self.size*.5)<self.max_width and self.scrolling or not self.scrolling and le<self.length:
+		while ((i+.7)*self.size*.5)<self.max_width and self.scrolling or not self.scrolling and le<self.tlen:
 			chr = self.text[le]
 			self.render = self.font.render(chr, True, self.color)
 			if chr is '.' or chr is ':':
@@ -55,7 +55,7 @@ class Text:
 				DS.blit(self.render, (self.x+i*self.size*.5,self.y))
 				i+=1
 			le+=1
-			if le >= self.length and self.scrolling:
+			if le >= self.tlen and self.scrolling:
 				le = 0
 			"""
 		for i in range(len(self.text)):
@@ -71,7 +71,7 @@ class Text:
 	
 	def set_text(self, new_str):
 		self.text = new_str
-		self.length = len(self.text)
+		self.tlen = len(self.text)
 		self.render = self.font.render(self.text, True, self.color)
 		self.rect = self.render.get_rect()
 		self.height = self.rect.height

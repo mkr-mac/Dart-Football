@@ -20,8 +20,13 @@ class Image:
 		return (self.y+self.height > mousey > self.y and 
 				self.x+self.width > mousex > self.x)
 				
-	def change_pic(image):
+	def change_pic(self, image):
 		self.image = pygame.image.load(image)
 		self.rect = self.image.get_rect()
 		self.width = self.image.get_width()
 		self.height = self.image.get_height()
+
+	def set_pos(self, x, y)
+		self.x = x
+		self.y = y
+		self.coords = (x,y)
