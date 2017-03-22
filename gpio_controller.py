@@ -8,6 +8,10 @@ class GPIO_Controller:
 		for port in input_ports:
 			GPIO.setup(port, GPIO.IN, pull_up_down = GPIO.PUD_DOWN)
 		
-	def poll():
-		#TODO
-		pass
+	def poll(self):
+		ports_on = []
+		for port in input_ports:
+			if GPIO.input(port):
+				ports_on += [port]
+		
+		return ports_on
