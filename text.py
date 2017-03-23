@@ -77,3 +77,4 @@ class Text:
 		self.height = self.rect.height
 		self.width = self.rect.width
 		self.c = 0
+		

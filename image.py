@@ -30,3 +30,4 @@ class Image:
 		self.x = x
 		self.y = y
 		self.coords = (x,y)
+		

@@ -9,6 +9,10 @@ FULLSCREEN = False
 led_font = 'advanced_led_board-7.ttf'
 current_milli_time = lambda: int(round(time.time() * 1000))
 
+def quit():
+	pygame.quit()
+	sys.exit()
+
 #Start Pygame
 pygame.init()
 FPS = 30
@@ -23,15 +27,15 @@ pygame.display.set_caption("Dart Football")
 input_ports = [18, 23, 24, 25, 8, 7, 12, 16, 20, 21,
 				4, 17, 27, 11, 5, 6, 13, 19, 26]
 				
-input_chart = [ 1, 5, 10, 0, 0, 0, 0, 0, 0, 0,
-				'yellow', -1, -5, 0, 0, 0, 0, 0, 0, 0,
-				'touchdown', 'fumble', 'interception', 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0, 0, 0 ,0, 0,
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
+action_chart = [ [1, 5, 10, 0, 0, 0, 0, 0, 0, 0]
+				['yellow', -1, -5, 0, 0, 0, 0, 0, 0, 0]
+				['touchdown', 'fumble', 'interception', 0, 0, 0, 0, 0, 0, 0,]
+				[0, 0, 0, 0, 0, 0, 0, 0, 0, 0,]
+				[0, 0, 0, 0, 0, 0, 0, 0, 0, 0,]
+				[0, 0, 0, 0, 0, 0, 0, 0, 0, 0,]
+				[0, 0, 0, 0, 0, 0, 0, 0 ,0, 0,]
+				[0, 0, 0, 0, 0, 0, 0, 0, 0, 0,]
+				[0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ] ]
 				
 field = Field()
 gpio_controller = GPIO_Controller(input_ports)
@@ -39,5 +43,13 @@ exit = False
 
 while not exit:
 	active_ports = gpio_controller.poll()
+	action = None
+	if not active_ports == 0 and active_ports[0] < 10 and active_ports[1] >=10 and active_ports < 19:
+		action = action_chart[active_ports[0]][active_ports[1]]
+	else:
+		action = None
+		
+	field.update(action)
+	field.draw(DS)
 	
-quit	
+quit()

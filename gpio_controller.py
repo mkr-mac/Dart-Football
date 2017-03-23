@@ -12,6 +12,9 @@ class GPIO_Controller:
 		ports_on = []
 		for port in input_ports:
 			if GPIO.input(port):
-				ports_on += [port]
-		
-		return ports_on
+				ports_on += [input_ports.index(port)]
+		if len(ports_on) == 2:
+			return ports_on
+		else:
+			return 0
+			
