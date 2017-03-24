@@ -26,7 +26,7 @@ class Image:
 		self.width = self.image.get_width()
 		self.height = self.image.get_height()
 
-	def set_pos(self, x, y)
+	def set_pos(self, x, y):
 		self.x = x
 		self.y = y
 		self.coords = (x,y)

@@ -6,7 +6,7 @@ class Text:
 	def __init__(self, text, x, y, font, size, color=None, max_width = None, scrolling = False, clickable = False, action = None):
 		self.x = x
 		self.y = y
-		self.c = 0
+		self.scroll_ticker = 0
 		self.coords = (x, y)
 		self.text = text.lower()
 		self.tlen = len(self.text)
@@ -38,10 +38,10 @@ class Text:
 		self.calls+=1
 		if not self.calls%30 and self.scrolling:
 			self.c+=1
-			if self.c == self.tlen:
-				self.c = 0
+			if self.scroll_ticker== self.tlen:
+				self.scroll_ticker = 0
 		i = 0
-		le = self.c
+		le = self.scroll_ticker
 		while ((i+.7)*self.size*.5)<self.max_width and self.scrolling or not self.scrolling and le<self.tlen:
 			chr = self.text[le]
 			self.render = self.font.render(chr, True, self.color)
@@ -76,5 +76,5 @@ class Text:
 		self.rect = self.render.get_rect()
 		self.height = self.rect.height
 		self.width = self.rect.width
-		self.c = 0
+		self.scroll_ticker = 0
 		

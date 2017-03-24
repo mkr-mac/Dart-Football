@@ -5,9 +5,9 @@ from scoreboard import Scoreboard
 class Field:
 	def __init__(self):
 		self.ground_image_url = 'field.png'
-		self.ground_image = Image(ground_image_url, 0, 0)
-		scoreboard = Scoreboard()
-		drawables = [self.ground_image]
+		self.ground_image = Image(self.ground_image_url, 0, 0)
+		self.scoreboard = Scoreboard()
+		self.drawables = [self.ground_image]
 		
 	def move_ball(self, distance):
 		#this is one way of moving the ball
@@ -20,9 +20,11 @@ class Field:
 			move_ball(action)
 		elif isinstance(action, str):
 			pass
+		
+		self.scoreboard.update()
 			
 	def draw(self, DS):
 		for d in self.drawables:
 			d.draw(DS)
-		scoreboard.draw(DS)
+		self.scoreboard.draw(DS)
 		
