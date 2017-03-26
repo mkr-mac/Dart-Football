@@ -35,20 +35,36 @@ class Scoreboard:
 							self.first_down_text, self.possession_indicator]
 	
 	def move_ball(self, gain):
+		self.cooldown -= 1
+		
 		if self.home_init_dir == 'left':
 			gain = -gain
 		if self.half == 2:
 			gain = -gain
 		if self.possession == 'away':
 			gain = -gain
-			
-		self.yardline += gain
 		
-		if self.yardline >= 100 or self.yardline <= 0:
-			score()
-		else:
-			check_first_down()
-			self.yardline_text.set_text(str(self.yardline))
+		if self.game_state == 'normal':
+			self.yardline += gain
+		
+			if self.yardline >= 100 or self.yardline <= 0:
+				score()
+			else:
+				check_first_down()
+				
+		elif self.game_state == 'breakaway':
+			self.yardline += gain
+			
+			if self.yardline >= 100 or self.yardline <= 0:
+				score()
+			elif not self.cooldown:
+				check_first_down()
+				
+		if not self.cooldown 
+			if self.game_state == 'punt':
+				self.game_state == 'puntreturn'
+			else:
+				self.game_state == 'normal'				
 			
 	def score(self):
 		pass
@@ -65,6 +81,58 @@ class Scoreboard:
 			self.possession = 'away'
 		else:
 			self.possession = 'home'
+			
+	def punt(self):
+		if self.game_state == 'normal':
+			self.game_state = 'punt'
+			self.cooldown = 3
+		
+	def kick(self):
+		if self.game_state == 'normal':
+			self.game_state = 'kick'
+	
+	def interception(self):
+		turnover()
+		gain = -20
+		if self.home_init_dir == 'left':
+			gain = -gain
+		if self.half == 2:
+			gain = -gain
+		if self.possession == 'away':
+			gain = -gain
+			
+		if self.yardline += gain >= 100:
+			self.yardline = 80
+		elif self.yardline += gain <= 0:
+			self.yardline = 20
+			
+		first_down()
+		
+	def fumble(self):
+		turnover()
+		first_down()
+		
+	def yellow(self):
+		if self.game_state == 'normal' or self.game_state == 'breakaway' or self.game_state == 'ldlpenalty':
+			move_ball(0)
+		elif self.game_state == 'punt':
+			move_ball(10)
+		
+	def offboard(self):
+		if self.game_state == 'normal' or self.game_state == 'breakaway' or self.game_state == 'punt':
+			move_ball(0):
+		elif self.game_state == 'ldlpenalty':
+			move_ball(-100):
+		
+	def breakaway(self, leng):
+		self.game_state = 'breakaway'
+		self.cooldown = leng
+
+	def penalty(self, leng):
+		pass
+		
+	def low_dart_penalty(self, leng):
+		pass
 		
 	def update(self):
 		self.home_score_text = Text(str(self.home_score), 0, 0, self.font, 54, (255,255,255))
@@ -78,12 +146,5 @@ class Scoreboard:
 	def draw(self, DS):
 		for o in self.drawables:
 			o.draw(DS)
-			
-	def punt(self):
-		pass
 		
-	def kick(self):
-		pass
-		
-	def yellow(self):
-		pass
+	
