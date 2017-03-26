@@ -12,7 +12,7 @@ class GPIO_Controller:
 	def poll(self):
 		ports_on = []
 		
-		for port in input_ports:
+		for port in self.input_ports:
 			if GPIO.input(port):
 				ports_on += [input_ports.index(port)]
 				

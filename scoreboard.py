@@ -1,6 +1,7 @@
 from text import Text
 from image import Image
 
+##Keeps track of the game and displays its properties.
 class Scoreboard:
 	def __init__(self):
 		self.font = 'advanced_led_board-7.ttf'
@@ -18,6 +19,8 @@ class Scoreboard:
 		self.half = 1
 		self.possession = 'home'
 		self.home_init_dir = 'right'
+		self.game_state = 'normal'
+		self.cooldown = 0
 		
 		self.home_score_text = Text(str(self.home_score), 0, 0, self.font, 54, (255,255,255))
 		self.away_score_text = Text(str(self.away_score), 100, 0, self.font, 54, (255,255,255))
@@ -31,7 +34,7 @@ class Scoreboard:
 							self.away_score_text, self.yardline_text, self.down_text,
 							self.first_down_text, self.possession_indicator]
 	
-	def move_yards(self, gain):
+	def move_ball(self, gain):
 		if self.home_init_dir == 'left':
 			gain = -gain
 		if self.half == 2:
@@ -39,13 +42,13 @@ class Scoreboard:
 		if self.possession == 'away':
 			gain = -gain
 			
-		yardline += gain
+		self.yardline += gain
 		
-		if yardline >= 100 or yardline <= 0:
+		if self.yardline >= 100 or self.yardline <= 0:
 			score()
 		else:
 			check_first_down()
-			yardline_text.set_text(str(yardline))
+			self.yardline_text.set_text(str(self.yardline))
 			
 	def score(self):
 		pass
@@ -75,3 +78,12 @@ class Scoreboard:
 	def draw(self, DS):
 		for o in self.drawables:
 			o.draw(DS)
+			
+	def punt(self):
+		pass
+		
+	def kick(self):
+		pass
+		
+	def yellow(self):
+		pass
