@@ -30,28 +30,32 @@ input_ports = [18, 23, 24, 25, 8, 7, 12, 16, 20, 21,
 				
 action_chart = [[1, 5, 10, 0, 0, 0, 0, 0, 0, 0],
 				['yellow', -1, -5, 0, 0, 0, 0, 0, 0, 0],
-				['touchdown', 'fumble', 'interception', 0, 0, 0, 0, 0, 0, 0,],
-				[0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
-				[0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
-				[0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
-				[0, 0, 0, 0, 0, 0, 0, 0 ,0, 0,],
-				[0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
-				[0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ] ]
+				['touchdown', 'fumble', 'interception', 0, 0, 0, 0, 0, 0, 0],
+				[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				[0, 0, 0, 0, 0, 0, 0, 0 ,0, 0],
+				[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				[0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
 				
 field = Field()
 #gpio_controller = GPIO_Controller(input_ports)
 exit = False
+poll_cooldown = 0
 i=0
+
 while not exit:
+	#this needs to be in a separate thread
 	#active_ports = gpio_controller.poll()
 	action = None
+	#This needs to look at more than the first 2 entries.
 	"""
 	if not active_ports == 0 and active_ports[0] < 10 and active_ports[1] >=10 and active_ports < 19:
 		action = action_chart[active_ports[0]][active_ports[1]]
 	else:
 		action = None
 	"""
-		
+	
 	field.update(action)
 	field.draw(DS)
 	

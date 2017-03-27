@@ -34,47 +34,113 @@ class Scoreboard:
 							self.away_score_text, self.yardline_text, self.down_text,
 							self.first_down_text, self.possession_indicator]
 	
-	def move_ball(self, gain):
+	def move_ball(self, g):
 		self.cooldown -= 1
+		gain = get_gain(g)
+		pos_gain = get_gain(abs(g))
 		
+		s = self.game_state
+		if s == 'normal':
+			self.yardline += gain
+			self.down += 1
+			if self.yardline >= 100 or self.yardline <= 0:
+				score(gain)
+			else:
+				if check_first_down():
+					first_down()
+				
+			if self.down > 4:
+				turnover()
+				first_down()
+				
+		elif s == 'breakaway':
+			self.yardline += pos_gain
+			if self.yardline >= 100 or self.yardline <= 0:
+				score(gain)
+			elif not self.cooldown:
+				if check_first_down():
+					first_down()
+				else:
+					down += 1
+					if self.down > 4:
+						turnover()
+						first_down()
+				
+		elif s == 'punt':
+			if pos_gain > 5
+				self.yardline += pos_gain
+			else:
+				self.yardline += 2*pos_gain
+				
+			if self.yardline >= 100:
+				self.yardline = 80
+				self.game_state = 'normal'
+				self.cooldown = -1
+			elif self.yardline <= 0:
+				self.yardline = 20
+				self.game_state = 'normal'
+				self.cooldown = -1
+				
+		elif s == 'puntreturn':
+			self.yardline += pos_gain
+			if self.yardline >= 100 or self.yardline <= 0:
+				score(gain)
+			first_down()
+				
+		if not self.cooldown 
+			if self.game_state == 'punt':
+				self.game_state == 'puntreturn'
+				turnover()
+			else:
+				self.game_state == 'normal'	
+
+	def get_gain(self, gain)
 		if self.home_init_dir == 'left':
 			gain = -gain
 		if self.half == 2:
 			gain = -gain
 		if self.possession == 'away':
 			gain = -gain
+		return gain
 		
-		if self.game_state == 'normal':
-			self.yardline += gain
-		
-			if self.yardline >= 100 or self.yardline <= 0:
-				score()
+	def score(self, gain):
+		if self.yardline >= 100:
+			if gain > 0:
+				if self.possession == 'home':
+					self.home_score += 6
+				elif self.possession == 'away':
+					self.away_score += 6
+				self.yardline = 98
+				self.game_state = 'PAT'
 			else:
-				check_first_down()
-				
-		elif self.game_state == 'breakaway':
-			self.yardline += gain
-			
-			if self.yardline >= 100 or self.yardline <= 0:
-				score()
-			elif not self.cooldown:
-				check_first_down()
-				
-		if not self.cooldown 
-			if self.game_state == 'punt':
-				self.game_state == 'puntreturn'
-			else:
-				self.game_state == 'normal'				
-			
-	def score(self):
-		pass
+				if self.possession == 'home':
+					self.away_score += 2
+				elif self.possession == 'away':
+					self.home_score += 2
+				self.yardline = 35
+				turnover()
+				first_down()
 	
 	def check_first_down(self):
 		pass
 		
 	def first_down(self):
 		self.down = 1
-		self.first_down_to_go = 10
+		if get_gain(1) == 1:
+			if self.yardline + 10 >= 100:
+				self.first_down_to_go = 100-self.yardline
+				self.first_down_yardline = 100
+			else:
+				self.first_down_to_go = 10
+				self.first_down_yardline = yardline + 10
+		else:
+			if self.yardline - 10 <= 0:
+				self.first_down_to_go = self.yardline
+				self.first_down_yardline = 0
+			else:
+				self.first_down_to_go = 10
+				self.first_down_yardline = yardline - 10
+			
 		
 	def turnover(self):
 		if self.possession == 'home':
@@ -111,7 +177,13 @@ class Scoreboard:
 	def fumble(self):
 		turnover()
 		first_down()
-		
+	
+	def touchdown():
+		if self.game_state == 'punt':
+			move_ball(50)
+		else:
+			move_ball(100)
+			
 	def yellow(self):
 		if self.game_state == 'normal' or self.game_state == 'breakaway' or self.game_state == 'ldlpenalty':
 			move_ball(0)
