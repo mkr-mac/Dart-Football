@@ -12,24 +12,21 @@ class Field:
 		self.drawables = [self.ground_image, self.scoreboard]
 		self.game_history = []
 		self.save_number = 0
-
+			
+	def draw(self, DS):
+		for d in self.drawables:
+			d.draw(DS)
+			
 	def update(self, action):
 		if not action == 0:
-			save_game()
+			self.game_history.append(self.scoreboard)
+			self.save_number+=1
 			if isinstance(action, int):
 				self.scoreboard.move_ball(action)
 			elif isinstance(action, str):
 				get_action(action)
 		
 		self.scoreboard.update()
-			
-	def draw(self, DS):
-		for d in self.drawables:
-			d.draw(DS)
-			
-	def save_game(self):
-		self.game_history.append(self.scoreboard)
-		self.save_number+=1
 		
 	def undo(self):
 		self.save_number-=1
@@ -37,7 +34,7 @@ class Field:
 		
 	def get_action(self, a):
 		#a is for action, which poems are hard
-		elif a == 'touchdown':
+		if a == 'touchdown':
 			self.scoreboard.touchdown()
 		elif a == 'interception':
 			self.scoreboard.interception()

@@ -67,7 +67,7 @@ class Scoreboard:
 						first_down()
 				
 		elif s == 'punt':
-			if pos_gain > 5
+			if pos_gain > 5:
 				self.yardline += pos_gain
 			else:
 				self.yardline += 2*pos_gain
@@ -87,14 +87,14 @@ class Scoreboard:
 				score(gain)
 			first_down()
 				
-		if not self.cooldown 
+		if not self.cooldown:
 			if self.game_state == 'punt':
 				self.game_state == 'puntreturn'
 				turnover()
 			else:
 				self.game_state == 'normal'	
 
-	def get_gain(self, gain)
+	def get_gain(self, gain):
 		if self.home_init_dir == 'left':
 			gain = -gain
 		if self.half == 2:
@@ -167,9 +167,9 @@ class Scoreboard:
 		if self.possession == 'away':
 			gain = -gain
 			
-		if self.yardline += gain >= 100:
+		if self.yardline + gain >= 100:
 			self.yardline = 80
-		elif self.yardline += gain <= 0:
+		elif self.yardline + gain <= 0:
 			self.yardline = 20
 			
 		first_down()
@@ -192,9 +192,9 @@ class Scoreboard:
 		
 	def offboard(self):
 		if self.game_state == 'normal' or self.game_state == 'breakaway' or self.game_state == 'punt':
-			move_ball(0):
+			move_ball(0)
 		elif self.game_state == 'ldlpenalty':
-			move_ball(-100):
+			move_ball(-100)
 		
 	def breakaway(self, leng):
 		self.game_state = 'breakaway'
