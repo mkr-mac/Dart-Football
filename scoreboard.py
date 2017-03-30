@@ -21,6 +21,7 @@ class Scoreboard:
 		self.home_init_dir = 'right'
 		self.game_state = 'normal'
 		self.cooldown = 0
+		self.ldl_holder = 0
 		
 		self.home_score_text = Text(str(self.home_score), 0, 0, self.font, 54, (255,255,255))
 		self.away_score_text = Text(str(self.away_score), 100, 0, self.font, 54, (255,255,255))
@@ -87,6 +88,22 @@ class Scoreboard:
 				score(gain)
 			first_down()
 				
+				
+		elif s == 'ldlpenalty':
+			if self.cooldown:
+				self.ldl_holder = g
+			else:
+				if g > self.ldl_holder:
+					self.game_state = 'normal'
+					self.down -= 1
+					move_ball(10)
+				elif g < self.ldl_holder:
+					self.game_state = 'normal'
+					self.down -= 1
+					move_ball(-10)
+				else:
+					self.cooldown = 2
+					
 		if not self.cooldown:
 			if self.game_state == 'punt':
 				self.game_state == 'puntreturn'
@@ -122,7 +139,7 @@ class Scoreboard:
 				first_down()
 	
 	def check_first_down(self):
-		pass
+		if gain
 		
 	def first_down(self):
 		self.down = 1
@@ -181,7 +198,7 @@ class Scoreboard:
 	def touchdown():
 		if self.game_state == 'punt':
 			move_ball(50)
-		else:
+		elif not self.game_state == 'kick' or not 'XP':
 			move_ball(100)
 			
 	def yellow(self):
@@ -197,14 +214,23 @@ class Scoreboard:
 			move_ball(-100)
 		
 	def breakaway(self, leng):
-		self.game_state = 'breakaway'
-		self.cooldown = leng
+		if not self.game_state == 'kick' or not self.game_state == 'XP':
+			self.game_state = 'breakaway'
+			self.cooldown = leng
 
 	def penalty(self, leng):
-		pass
+		if not self.game_state == 'kick' or not self.game_state == 'XP':
+			self.down -= 1
+			move_ball(-leng)
 		
 	def low_dart_penalty(self, leng):
-		pass
+		if self.game_state == 'normal':
+			self.cooldown = 2
+			self.game_state = 'ldlpenalty'
+		elif self.game_state == 'breakaway' or self.game_state == 'puntreturn' or self.game_state = 'ldlpenalty':
+			move_ball(0)
+		elif self.game_state == 'punt':
+			move_ball (10)
 		
 	def update(self):
 		self.home_score_text = Text(str(self.home_score), 0, 0, self.font, 54, (255,255,255))
