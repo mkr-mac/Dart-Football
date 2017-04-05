@@ -137,9 +137,30 @@ class Scoreboard:
 				self.yardline = 35
 				turnover()
 				first_down()
+		if self.yardline <= 0:
+			if gain < 0:
+				if self.possession == 'home':
+					self.home_score += 6
+				elif self.possession == 'away':
+					self.away_score += 6
+				self.yardline = 2
+				self.game_state = 'PAT'
+			else:
+				if self.possession == 'home':
+					self.away_score += 2
+				elif self.possession == 'away':
+					self.home_score += 2
+				self.yardline = 65
+				turnover()
+				first_down()
 	
-	def check_first_down(self):
-		if gain
+	def check_first_down(self, gain):
+		if self.yardline >= self.first_down_yardline and gain > 0:
+			return True
+		elif self.yardline <= self.first_down_yardline and gain < 0:
+			return True
+		else:
+			return False
 		
 	def first_down(self):
 		self.down = 1
@@ -167,12 +188,56 @@ class Scoreboard:
 			
 	def punt(self):
 		if self.game_state == 'normal':
+			#punt.wmv
 			self.game_state = 'punt'
 			self.cooldown = 3
 		
 	def kick(self):
 		if self.game_state == 'normal':
 			self.game_state = 'kick'
+			
+	def yes_good(self):
+		if self.game_state == 'kick':
+			#kick_is_up_and_its_good.avi
+			if possession == 'home':
+				self.home_score += 3
+			else:
+				self.away_score += 3
+				
+			if get_gain(1) == 1:
+				self.yardline = 25
+			else:
+				self.yardline = 75
+			turnover()
+			game_state = 'normal'
+			
+		elif self.game_state == 'XP':
+			#kick_is_up_and_its_good.avi
+			if possession == 'home':
+				self.home_score += 1
+			else:
+				self.away_score += 1
+			
+			if get_gain(1) == 1:
+				self.yardline = 25
+			else:
+				self.yardline = 75
+			turnover()
+			game_state = 'normal'
+		
+	def no_notgood(self):
+		if self.game_state == 'kick':
+			#nogood.mp4
+			turnover()
+			game_state = 'normal'
+		elif self.game_state == 'XP':
+			#nogood.mp4
+			if get_gain(1) == 1:
+				self.yardline = 25
+			else:
+				self.yardline = 75
+			turnover()
+			game_state = 'normal'
 	
 	def interception(self):
 		turnover()
@@ -227,7 +292,7 @@ class Scoreboard:
 		if self.game_state == 'normal':
 			self.cooldown = 2
 			self.game_state = 'ldlpenalty'
-		elif self.game_state == 'breakaway' or self.game_state == 'puntreturn' or self.game_state = 'ldlpenalty':
+		elif self.game_state == 'breakaway' or self.game_state == 'puntreturn' or self.game_state == 'ldlpenalty':
 			move_ball(0)
 		elif self.game_state == 'punt':
 			move_ball (10)
