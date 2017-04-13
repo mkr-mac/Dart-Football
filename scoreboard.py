@@ -4,7 +4,7 @@ from image import Image
 ##Keeps track of the game and displays its properties.
 class Scoreboard:
 	def __init__(self):
-		self.font = 'advanced_led_board-7.ttf'
+		self.font = 'scoreboardfont.ttf'
 		self.board_image = Image('board.png', 0, 0)
 		
 		self.home_score = 0
@@ -23,17 +23,17 @@ class Scoreboard:
 		self.cooldown = 0
 		self.ldl_holder = 0
 		
-		self.home_score_text = Text(str(self.home_score), 0, 0, self.font, 54, (255,255,255))
-		self.away_score_text = Text(str(self.away_score), 100, 0, self.font, 54, (255,255,255))
-		self.yardline_text = Text(str(self.yardline), 0, 100, self.font, 54, (255,255,255))
-		self.first_down_text = Text(str(self.first_down_to_go), 200, 100, self.font, 54, (255,255,255))
-		self.down_text = Text(str(self.down), 100, 100, self.font, 54, (255,255,255))
-		self.half_text = Text(str(self.half), 100, 200, self.font, 54, (255,255,255))
-		self.possession_indicator = Image('possession_indicator.png', 200, 200)
+		self.home_name = Text("HOME", 24, 32, self.font, 24, (255,255,255))
+		self.away_name = Text("AWAY", 382, 32, self.font, 24, (255,255,255))
+		self.home_score_text = Text(str(self.home_score), 45, 95, self.font, 36, (255,255,255))
+		self.away_score_text = Text(str(self.away_score), 425, 95, self.font, 36, (255,255,255))
+		self.down_and_to_go = Text(str(self.down) + "RD & " + str(self.yardline), 170, 210, self.font, 24, (0,0,0))
+		self.half_text = Text(str(self.half)+"ST", 222, 120, self.font, 24, (255,255,255))
+		self.possession_indicator = Image('possession_indicator.png', 225, 44)
 		
-		self.drawables = [self.board_image, self.home_score_text, 
-							self.away_score_text, self.yardline_text, self.down_text,
-							self.first_down_text, self.possession_indicator]
+		self.drawables = [self.board_image, self.home_name, self.away_name,  
+							self.home_score_text, self.away_score_text, self.down_and_to_go,
+							self.half_text, self.possession_indicator]
 	
 	def move_ball(self, g):
 		self.cooldown -= 1
@@ -298,13 +298,13 @@ class Scoreboard:
 			move_ball (10)
 		
 	def update(self):
-		self.home_score_text = Text(str(self.home_score), 0, 0, self.font, 54, (255,255,255))
-		self.away_score_text = Text(str(self.away_score), 100, 0, self.font, 54, (255,255,255))
-		self.yardline_text = Text(str(self.yardline), 0, 100, self.font, 54, (255,255,255))
-		self.first_down_text = Text(str(self.first_down_to_go), 200, 100, self.font, 54, (255,255,255))
-		self.down_text = Text(str(self.down), 100, 100, self.font, 54, (255,255,255))
-		self.half_text = Text(str(self.half), 100, 200, self.font, 54, (255,255,255))
-		self.possession_indicator = Image('possession_indicator.png', 200, 200)
+		self.home_name = Text(str(self.home_score), 24, 32, self.font, 24, (255,255,255))
+		self.away_name = Text(str(self.away_score), 382, 32, self.font, 24, (255,255,255))
+		self.home_score_text = Text(str(self.home_score), 45, 95, self.font, 36, (255,255,255))
+		self.away_score_text = Text(str(self.away_score), 425, 95, self.font, 36, (255,255,255))
+		self.down_and_to_go = Text(str(self.down) + "RD & " + str(self.yardline), 170, 210, self.font, 24, (0,0,0))
+		self.half_text = Text(str(self.half)+"ST", 222, 120, self.font, 24, (255,255,255))
+		self.possession_indicator = Image('possession_indicator.png', 225, 44)
 		
 	def draw(self, DS):
 		for o in self.drawables:
