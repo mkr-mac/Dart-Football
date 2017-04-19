@@ -24,7 +24,7 @@ class Field:
 			if isinstance(action, int):
 				self.scoreboard.move_ball(action)
 			elif isinstance(action, str):
-				get_action(action)
+				self.get_action(action)
 		
 		self.scoreboard.update()
 		
@@ -59,5 +59,5 @@ class Field:
 		elif a == 'offboard':
 			self.scoreboard.offboard()
 		elif a == 'undo':
-			undo()
+			self.undo()
 			

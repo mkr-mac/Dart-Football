@@ -8,17 +8,19 @@ import pygame, sys, os, threading
 SCREENWIDTH = 800
 SCREENHEIGHT = 480
 FULLSCREEN = False
-led_font = 'advanced_led_board-7.ttf'
-current_milli_time = lambda: int(round(time.time() * 1000))
 
 def quit():
 	pygame.quit()
 	sys.exit()
 	
 def port_scan():
+	global ports_on
+	ports_on = []
 	#Test Scan plz ignore
 	while True:
-		ports_on += [0, 11]
+		ports_on += [0]
+		ports_on += [11]
+		
 						
 	#if GPIO.input(port):
 		#ports_on += [input_ports.index(port)]
@@ -50,10 +52,7 @@ action_chart = [[1, 5, 10, 0, 0, 0, 0, 0, 0, 0],
 field = Field()
 #gpio_controller = GPIO_Controller(input_ports)
 exit = False
-poll_cooldown = 0
-i=0
-global ports_on
-ports_on = []
+i = 0
 
 t = threading.Thread(target=port_scan, args = ())
 t.daemon = True
@@ -61,16 +60,22 @@ t.start()
 
 while not exit:
 	action = None
-	
-	for n in range(0, len(ports_on)-1):
-		if ports_on[n] < 10 and ports_on[n+1] >=10 and ports_on[n+1] < 19:
-			action = action_chart[ports_on[n]][ports_on[n+1]-10]
+	try:
+		print("?ha")
+		p = ports_on
+		print("ng?")
+	except:
+		p = []
+		
+	for n in range(0, len(p)-1):
+		print("alive?")
+		if p[n] < 10 and p[n+1] >= 10 and p[n+1] < 19:
+			action = action_chart[p[n]][p[n+1]-10]
 		else:
 			action = None
-	
-	ports_on = []
+			
 	print (action)
-	print (ports_on)
+	ports_on = []
 	field.update(action)
 	field.draw(DS)
 	
