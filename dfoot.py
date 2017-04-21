@@ -2,7 +2,7 @@ from field import Field
 #from gpio_controller import GPIO_Controller
 from pygame.locals import *
 #import RPi.GPIO as GPIO
-import pygame, sys, os, threading
+import pygame, sys, os, time, threading
 
 #Screen size constants
 SCREENWIDTH = 800
@@ -15,12 +15,15 @@ def quit():
 	
 def port_scan():
 	global ports_on
-	ports_on = []
+	ports_on = [0]*105
+	b=0
 	#Test Scan plz ignore
 	while True:
-		ports_on += [0]
-		ports_on += [11]
-		
+		ports_on[b] = 0
+		ports_on[b+1] = 11
+		b+=2
+		if b>100:
+			b=0
 						
 	#if GPIO.input(port):
 		#ports_on += [input_ports.index(port)]
@@ -57,31 +60,29 @@ i = 0
 t = threading.Thread(target=port_scan, args = ())
 t.daemon = True
 t.start()
-
+time.sleep(1)
 while not exit:
 	action = None
 	try:
-		print("?ha")
-		p = ports_on
-		print("ng?")
+		p = ports_on		
 	except:
+		print ("?")
 		p = []
 		
 	for n in range(0, len(p)-1):
-		print("alive?")
 		if p[n] < 10 and p[n+1] >= 10 and p[n+1] < 19:
 			action = action_chart[p[n]][p[n+1]-10]
+			break
 		else:
 			action = None
 			
 	print (action)
-	ports_on = []
 	field.update(action)
 	field.draw(DS)
 	
 	pygame.display.update()
 	fpsClock.tick(FPS)
-	if i < 90:
+	if i < 6:
 		i+=1
 	else:
 		exit = True

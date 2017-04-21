@@ -16,11 +16,14 @@ class Field:
 	def draw(self, DS):
 		for d in self.drawables:
 			d.draw(DS)
+		
+		self.scoreboard.draw(DS)
 			
 	def update(self, action):
-		if not action == 0:
+		if not action == None:
 			self.game_history.append(self.scoreboard)
 			self.save_number+=1
+
 			if isinstance(action, int):
 				self.scoreboard.move_ball(action)
 			elif isinstance(action, str):
