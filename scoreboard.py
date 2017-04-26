@@ -43,9 +43,11 @@ class Scoreboard:
 		s = self.game_state
 		if s == 'normal':
 			self.yardline += gain
+			self.first_down_to_go -= gain
+			print (self.yardline)
 			self.down += 1
 			if self.yardline >= 100 or self.yardline <= 0:
-				score(gain)
+				self.score(gain)
 			else:
 				if self.check_first_down(gain):
 					self.first_down()
@@ -204,12 +206,12 @@ class Scoreboard:
 			else:
 				self.away_score += 3
 				
-			if get_gain(1) == 1:
+			if self.get_gain(1) == 1:
 				self.yardline = 25
 			else:
 				self.yardline = 75
 			self.turnover()
-			game_state = 'normal'
+			self.game_state = 'normal'
 			
 		elif self.game_state == 'XP':
 			#kick_is_up_and_its_good.avi
@@ -218,12 +220,12 @@ class Scoreboard:
 			else:
 				self.away_score += 1
 			
-			if get_gain(1) == 1:
+			if self.get_gain(1) == 1:
 				self.yardline = 25
 			else:
 				self.yardline = 75
 			self.turnover()
-			game_state = 'normal'
+			self.game_state = 'normal'
 		
 	def no_notgood(self):
 		if self.game_state == 'kick':
@@ -260,7 +262,7 @@ class Scoreboard:
 		self.turnover()
 		self.first_down()
 	
-	def touchdown():
+	def touchdown(self):
 		if self.game_state == 'punt':
 			self.move_ball(50)
 		elif not self.game_state == 'kick' or not 'XP':
@@ -298,13 +300,35 @@ class Scoreboard:
 			self.move_ball (10)
 		
 	def update(self):
-		self.home_name = Text(str(self.home_score), 24, 32, self.font, 24, (255,255,255))
-		self.away_name = Text(str(self.away_score), 382, 32, self.font, 24, (255,255,255))
+		self.home_name = Text(str("HOME"), 24, 32, self.font, 24, (255,255,255))
+		self.away_name = Text(str("HOME"), 382, 32, self.font, 24, (255,255,255))
 		self.home_score_text = Text(str(self.home_score), 45, 95, self.font, 36, (255,255,255))
 		self.away_score_text = Text(str(self.away_score), 425, 95, self.font, 36, (255,255,255))
-		self.down_and_to_go = Text(str(self.down) + "RD & " + str(self.yardline), 170, 210, self.font, 24, (0,0,0))
-		self.half_text = Text(str(self.half)+"ST", 222, 120, self.font, 24, (255,255,255))
+		if self.game_state == "PAT":
+			self.down_and_to_go = Text("POINT AFTER ATTEMPT", 170, 210, self.font, 24, (0,0,0))
+		elif self.down == 1:
+			self.down_and_to_go = Text(str(self.down) + " ST & " + str(self.first_down_to_go), 170, 210, self.font, 24, (0,0,0))
+		elif self.down == 2:
+			self.down_and_to_go = Text(str(self.down) + " ND & " + str(self.first_down_to_go), 170, 210, self.font, 24, (0,0,0))
+		elif self.down == 3:
+			self.down_and_to_go = Text(str(self.down) + " RD & " + str(self.first_down_to_go), 170, 210, self.font, 24, (0,0,0))
+		elif self.down == 4:
+			self.down_and_to_go = Text(str(self.down) + " TH & " + str(self.first_down_to_go), 170, 210, self.font, 24, (0,0,0))
+		else:
+			self.down_and_to_go = Text(str(self.down) + " OH NO & " + str(self.first_down_to_go), 170, 210, self.font, 24, (0,0,0))
+
+		if self.half == 1:
+			self.half_text = Text(str(self.half)+" ST", 222, 120, self.font, 24, (255,255,255))
+		elif self.half == 2:
+			self.half_text = Text(str(self.half)+" ND", 222, 120, self.font, 24, (255,255,255))
+		else:
+			self.half_text = Text(str(self.half)+" NO", 222, 120, self.font, 24, (255,255,255))
+
+
 		self.possession_indicator = Image('possession_indicator.png', 225, 44)
+		self.drawables = [self.board_image, self.home_name, self.away_name,  
+					self.home_score_text, self.away_score_text, self.down_and_to_go,
+					self.half_text, self.possession_indicator]
 		
 	def draw(self, DS):
 		for o in self.drawables:

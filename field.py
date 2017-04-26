@@ -28,7 +28,7 @@ class Field:
 				self.scoreboard.move_ball(action)
 			elif isinstance(action, str):
 				self.get_action(action)
-		
+
 		self.scoreboard.update()
 		
 	def undo(self):

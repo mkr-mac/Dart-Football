@@ -43,16 +43,16 @@ class Text:
 		i = 0
 		le = self.scroll_ticker
 		while ((i+.7)*self.size*.5)<self.max_width and self.scrolling or not self.scrolling and le<self.tlen:
-			chr = self.text[le]
-			self.render = self.font.render(chr, True, self.color)
-			if chr is '.' or chr is ':':
-				DS.blit(self.render, ((self.x+i*self.size*.5),self.y))
-				i+=.5
-			elif chr is '1':
-				DS.blit(self.render, ((self.x+i*self.size*.5)+self.size*.27,self.y))
+			char = self.text[le]
+			self.render = self.font.render(char, True, self.color)
+			if char is '.' or char is ':' or char is 'i':
+				DS.blit(self.render, ((self.x+i*self.size*.6),self.y))
+				i+=.6
+			elif char is '1':
+				DS.blit(self.render, ((self.x+i*self.size*.6)+self.size*.27,self.y))
 				i+=1
 			else:
-				DS.blit(self.render, (self.x+i*self.size*.5,self.y))
+				DS.blit(self.render, (self.x+i*self.size*.6,self.y))
 				i+=1
 			le+=1
 			if le >= self.tlen and self.scrolling:

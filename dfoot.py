@@ -42,7 +42,7 @@ pygame.display.set_caption("Dart Football")
 input_ports = [18, 23, 24, 25, 8, 7, 12, 16, 20, 21,
 				4, 17, 27, 11, 5, 6, 13, 19, 26]
 				
-action_chart = [[1, 5, 10, 0, 0, 0, 0, 0, 0, 0],
+action_chart = [[1, 4, 10, 0, 0, 0, 0, 0, 0, 0],
 				['yellow', -1, -5, 0, 0, 0, 0, 0, 0, 0],
 				['touchdown', 'fumble', 'interception', 0, 0, 0, 0, 0, 0, 0],
 				[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -60,13 +60,12 @@ i = 0
 t = threading.Thread(target=port_scan, args = ())
 t.daemon = True
 t.start()
-time.sleep(1)
+
 while not exit:
 	action = None
 	try:
 		p = ports_on		
 	except:
-		print ("?")
 		p = []
 		
 	for n in range(0, len(p)-1):
@@ -82,7 +81,7 @@ while not exit:
 	
 	pygame.display.update()
 	fpsClock.tick(FPS)
-	if i < 6:
+	if i < 22:
 		i+=1
 	else:
 		exit = True
