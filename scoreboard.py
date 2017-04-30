@@ -43,7 +43,7 @@ class Scoreboard:
 		s = self.game_state
 		if s == 'normal':
 			self.yardline += gain
-			self.first_down_to_go -= gain
+			self.first_down_to_go -= g
 			print (self.yardline)
 			self.down += 1
 			if self.yardline >= 100 or self.yardline <= 0:
@@ -301,7 +301,7 @@ class Scoreboard:
 		
 	def update(self):
 		self.home_name = Text(str("HOME"), 24, 32, self.font, 24, (255,255,255))
-		self.away_name = Text(str("HOME"), 382, 32, self.font, 24, (255,255,255))
+		self.away_name = Text(str("AWAY"), 382, 32, self.font, 24, (255,255,255))
 		self.home_score_text = Text(str(self.home_score), 45, 95, self.font, 36, (255,255,255))
 		self.away_score_text = Text(str(self.away_score), 425, 95, self.font, 36, (255,255,255))
 		if self.game_state == "PAT":

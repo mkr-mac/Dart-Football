@@ -12,15 +12,15 @@ FULLSCREEN = False
 def quit():
 	pygame.quit()
 	sys.exit()
-	
+
 def port_scan():
 	global ports_on
 	ports_on = [0]*105
 	b=0
 	#Test Scan plz ignore
-	while True:
+	while not thread_stop:
 		ports_on[b] = 0
-		ports_on[b+1] = 11
+		ports_on[b+1] = 10
 		b+=2
 		if b>100:
 			b=0
@@ -30,7 +30,7 @@ def port_scan():
 		
 #Start Pygame
 pygame.init()
-FPS = 1
+FPS = 30
 fpsClock  = pygame.time.Clock()
 if FULLSCREEN:
 	DS = pygame.display.set_mode((SCREENWIDTH, SCREENHEIGHT), pygame.FULLSCREEN)
@@ -56,13 +56,20 @@ field = Field()
 #gpio_controller = GPIO_Controller(input_ports)
 exit = False
 i = 0
+action_delay = 0
 
+thread_stop = False
 t = threading.Thread(target=port_scan, args = ())
 t.daemon = True
 t.start()
 
 while not exit:
 	action = None
+
+	for event in pygame.event.get():
+		if event.type == pygame.QUIT:
+			quit()
+
 	try:
 		p = ports_on		
 	except:
@@ -71,17 +78,31 @@ while not exit:
 	for n in range(0, len(p)-1):
 		if p[n] < 10 and p[n+1] >= 10 and p[n+1] < 19:
 			action = action_chart[p[n]][p[n+1]-10]
+			print ("action = " + str(action))
+			thread_stop = True
+			time.sleep(.01)
+			ports_on = [0]*105
+			action_delay = 23
 			break
 		else:
 			action = None
-			
-	print (action)
+
+	if thread_stop:
+		action_delay -= 1
+		if action_delay <= 0:
+			thread_stop = False
+			t = threading.Thread(target=port_scan, args = ())
+			t.daemon = True
+			t.start()
+
 	field.update(action)
 	field.draw(DS)
 	
 	pygame.display.update()
 	fpsClock.tick(FPS)
-	if i < 22:
+
+	#TESTING! Closes after some time automatically
+	if i < 750:
 		i+=1
 	else:
 		exit = True
