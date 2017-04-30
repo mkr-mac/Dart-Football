@@ -5,9 +5,9 @@ from pygame.locals import *
 import pygame, sys, os, time, threading
 
 #Screen size constants
-SCREENWIDTH = 800
+SCREENWIDTH = 720
 SCREENHEIGHT = 480
-FULLSCREEN = False
+FULLSCREEN = True
 
 def quit():
 	pygame.quit()
@@ -18,12 +18,13 @@ def port_scan():
 	ports_on = [0]*105
 	b=0
 	#Test Scan plz ignore
-	while not thread_stop:
-		ports_on[b] = 0
-		ports_on[b+1] = 10
-		b+=2
-		if b>100:
-			b=0
+	while True:
+		if not thread_stop:
+			ports_on[b] = 0
+			ports_on[b+1] = 10
+			b+=2
+			if b>100:
+				b=0
 						
 	#if GPIO.input(port):
 		#ports_on += [input_ports.index(port)]
@@ -69,6 +70,9 @@ while not exit:
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
 			quit()
+		elif event.type == pygame.KEYDOWN:
+			if event.key == pygame.K_d:
+				quit()
 
 	try:
 		p = ports_on		
@@ -91,12 +95,10 @@ while not exit:
 		action_delay -= 1
 		if action_delay <= 0:
 			thread_stop = False
-			t = threading.Thread(target=port_scan, args = ())
-			t.daemon = True
-			t.start()
-
-	field.update(action)
-	field.draw(DS)
+	
+	if not (action == None):
+		field.update(action)
+		field.draw(DS)
 	
 	pygame.display.update()
 	fpsClock.tick(FPS)
