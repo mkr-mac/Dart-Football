@@ -32,8 +32,9 @@ class Field:
 		self.scoreboard.update()
 		
 	def undo(self):
-		self.save_number -= 1
-		self.scoreboard = self.game_history[self.save_number]
+		if save_number > 0:
+			self.save_number -= 1
+			self.scoreboard = self.game_history[self.save_number]
 		
 	def get_action(self, a):
 		#a is for action, which poems are hard
