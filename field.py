@@ -32,7 +32,7 @@ class Field:
 		self.scoreboard.update()
 		
 	def undo(self):
-		self.save_number-=1
+		self.save_number -= 1
 		self.scoreboard = self.game_history[self.save_number]
 		
 	def get_action(self, a):
@@ -61,6 +61,10 @@ class Field:
 			self.scoreboard.kick()
 		elif a == 'offboard':
 			self.scoreboard.offboard()
+		elif a == 'yesgood':
+			self.scoreboard.yes_good()
+		elif a == 'nonotgood':
+			self.scoreboard.no_notgood()
 		elif a == 'undo':
 			self.undo()
 			
