@@ -13,8 +13,11 @@ class GPIO_Controller:
 		ports_on = []
 		
 		for port in self.input_ports:
-			if GPIO.input(port):
-				ports_on += [input_ports.index(port)]
-				
+			try:
+				if GPIO.input(port):
+					ports_on += [self.input_ports.index(port)]
+			except:
+				pass
+		print ports_on		
 		return ports_on
 		

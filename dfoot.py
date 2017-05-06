@@ -4,9 +4,9 @@ from pygame.locals import *
 import pygame, sys, os, time, threading
 
 #Screen size constants
-SCREENWIDTH = 720
-SCREENHEIGHT = 480
-FULLSCREEN = True
+SCREENWIDTH = 320
+SCREENHEIGHT = 240
+FULLSCREEN = False
 
 def quit():
 	pygame.quit()
@@ -32,8 +32,8 @@ else:
 
 pygame.display.set_caption("Dart Football")
 
-input_ports = [18, 23, 24, 25, 8, 7, 12, 16, 20, 21,
-				4, 17, 27, 11, 5, 6, 13, 19, 26]
+input_ports = [4, 17, 27, 11, 5, 6, 13, 19, 26,
+				18, 23, 24, 25, 8, 7, 12, 16, 20, 21]
 				
 action_chart = [[1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
 				[-1, -2, -3, -4, -5, -6, -7, -8, -9, -10],
@@ -47,8 +47,6 @@ action_chart = [[1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
 				
 field = Field()
 
-exit = False
-i = 0
 action_delay = 0
 
 thread_stop = False
@@ -56,7 +54,7 @@ t = threading.Thread(target=port_scan, args = ())
 t.daemon = True
 t.start()
 
-while not exit:
+while True:
 	action = None
 
 	for event in pygame.event.get():
@@ -72,7 +70,7 @@ while not exit:
 		p = []
 		
 	for n in range(0, len(p)-1):
-		if p[n] < 10 and p[n+1] >= 10 and p[n+1] < 19:
+		if p[n] < 9 and p[n+1] >= 9 and p[n+1] < 19:
 			action = action_chart[p[n]][p[n+1]-10]
 			print ("action = " + str(action))
 			thread_stop = True
@@ -95,10 +93,5 @@ while not exit:
 	pygame.display.update()
 	fpsClock.tick(FPS)
 
-	#TESTING! Closes after some time automatically
-	if i < 750:
-		i+=1
-	else:
-		exit = True
 	
 quit()
