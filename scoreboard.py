@@ -300,10 +300,10 @@ class Scoreboard:
 			self.move_ball (10)
 		
 	def update(self):
-		self.home_name = Text(str("HOME"), 24, 32, self.font, 24, (255,255,255))
-		self.away_name = Text(str("AWAY"), 382, 32, self.font, 24, (255,255,255))
-		self.home_score_text = Text(str(self.home_score), 45, 95, self.font, 36, (255,255,255))
-		self.away_score_text = Text(str(self.away_score), 425, 95, self.font, 36, (255,255,255))
+		self.home_name = Text(str("HOME"), 24, 32, self.font, 48, (255,255,255))
+		self.away_name = Text(str("AWAY"), 382, 32, self.font, 48, (255,255,255))
+		self.home_score_text = Text(str(self.home_score), 45, 190, self.font, 36, (255,255,255))
+		self.away_score_text = Text(str(self.away_score), 425, 190, self.font, 36, (255,255,255))
 		if self.game_state == "PAT":
 			self.down_and_to_go = Text("POINT AFTER ATTEMPT", 170, 210, self.font, 24, (0,0,0))
 		elif self.down == 1:
@@ -318,11 +318,11 @@ class Scoreboard:
 			self.down_and_to_go = Text(str(self.down) + " OH NO & " + str(self.first_down_to_go), 170, 210, self.font, 24, (0,0,0))
 
 		if self.half == 1:
-			self.half_text = Text(str(self.half)+" ST", 222, 120, self.font, 24, (255,255,255))
+			self.half_text = Text(str(self.half)+" ST", 222, 120, self.font, 48, (255,255,255))
 		elif self.half == 2:
-			self.half_text = Text(str(self.half)+" ND", 222, 120, self.font, 24, (255,255,255))
+			self.half_text = Text(str(self.half)+" ND", 222, 120, self.font, 48, (255,255,255))
 		else:
-			self.half_text = Text(str(self.half)+" NO", 222, 120, self.font, 24, (255,255,255))
+			self.half_text = Text(str(self.half)+" NO", 222, 120, self.font, 48, (255,255,255))
 
 
 		self.possession_indicator = Image('possession_indicator.png', 225, 44)
