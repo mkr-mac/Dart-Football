@@ -9,7 +9,8 @@ class Field:
 		self.ground_image_url = 'field.png'
 		self.ground_image = Image(self.ground_image_url, 0, 0)
 		self.scoreboard = Scoreboard()
-		self.drawables = [self.ground_image, self.scoreboard]
+		self.yardline = Text("0", 360, 360, self.font, 56, (255,255,255))
+		self.drawables = [self.ground_image, self.yardline, self.scoreboard]
 		self.game_history = []
 		self.save_number = 0
 			
@@ -30,11 +31,12 @@ class Field:
 				self.get_action(action)
 
 		self.scoreboard.update()
+		self.yardline.set_text(str(self.scoreboard.yardline))
 		
 	def undo(self):
 		if save_number > 0:
 			self.save_number -= 1
-			self.scoreboard = self.game_history[self.save_number]
+			self.scoreboard = self.game_history.pop()
 		
 	def get_action(self, a):
 		#a is for action, which poems are hard

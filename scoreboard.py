@@ -300,35 +300,30 @@ class Scoreboard:
 			self.move_ball (10)
 		
 	def update(self):
-		self.home_name = Text(str("HOME"), 24, 32, self.font, 48, (255,255,255))
-		self.away_name = Text(str("AWAY"), 382, 32, self.font, 48, (255,255,255))
-		self.home_score_text = Text(str(self.home_score), 45, 190, self.font, 36, (255,255,255))
-		self.away_score_text = Text(str(self.away_score), 425, 190, self.font, 36, (255,255,255))
+		self.home_score_text.set_text(str(self.home_score))
+		self.away_score_text.set_text(str(self.away_score))
 		if self.game_state == "PAT":
-			self.down_and_to_go = Text("POINT AFTER ATTEMPT", 170, 210, self.font, 24, (0,0,0))
+			self.down_and_to_go.set_text("POINT AFTER ATTEMPT")
 		elif self.down == 1:
-			self.down_and_to_go = Text(str(self.down) + " ST & " + str(self.first_down_to_go), 170, 210, self.font, 24, (0,0,0))
+			self.down_and_to_go.set_text(str(self.down) + " ST & " + str(self.first_down_to_go))
 		elif self.down == 2:
-			self.down_and_to_go = Text(str(self.down) + " ND & " + str(self.first_down_to_go), 170, 210, self.font, 24, (0,0,0))
+			self.down_and_to_go.set_text(str(self.down) + " ND & " + str(self.first_down_to_go))
 		elif self.down == 3:
-			self.down_and_to_go = Text(str(self.down) + " RD & " + str(self.first_down_to_go), 170, 210, self.font, 24, (0,0,0))
+			self.down_and_to_go.set_text(str(self.down) + " RD & " + str(self.first_down_to_go))
 		elif self.down == 4:
-			self.down_and_to_go = Text(str(self.down) + " TH & " + str(self.first_down_to_go), 170, 210, self.font, 24, (0,0,0))
+			self.down_and_to_go.set_text(str(self.down) + " TH & " + str(self.first_down_to_go))
 		else:
-			self.down_and_to_go = Text(str(self.down) + " OH NO & " + str(self.first_down_to_go), 170, 210, self.font, 24, (0,0,0))
+			self.down_and_to_go.set_text(str(self.down) + " OH NO & " + str(self.first_down_to_go))
 
 		if self.half == 1:
-			self.half_text = Text(str(self.half)+" ST", 222, 120, self.font, 48, (255,255,255))
+			self.half_text.set_text(str(self.half)+" ST")
 		elif self.half == 2:
-			self.half_text = Text(str(self.half)+" ND", 222, 120, self.font, 48, (255,255,255))
+			self.half_text.set_text(str(self.half)+" ND")
 		else:
-			self.half_text = Text(str(self.half)+" NO", 222, 120, self.font, 48, (255,255,255))
+			self.half_text.set_text(str(self.half)+" NO")
 
 
-		self.possession_indicator = Image('possession_indicator.png', 225, 44)
-		self.drawables = [self.board_image, self.home_name, self.away_name,  
-					self.home_score_text, self.away_score_text, self.down_and_to_go,
-					self.half_text, self.possession_indicator]
+		self.possession_indicator.set_pos(225, 44)
 		
 	def draw(self, DS):
 		for o in self.drawables:
