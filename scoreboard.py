@@ -130,7 +130,7 @@ class Scoreboard:
 				elif self.possession == 'away':
 					self.away_score += 6
 				self.yardline = 98
-				self.game_state = 'PAT'
+				self.game_state = 'XP'
 			else:
 				if self.possession == 'home':
 					self.away_score += 2
@@ -146,7 +146,7 @@ class Scoreboard:
 				elif self.possession == 'away':
 					self.away_score += 6
 				self.yardline = 2
-				self.game_state = 'PAT'
+				self.game_state = 'XP'
 			else:
 				if self.possession == 'home':
 					self.away_score += 2
