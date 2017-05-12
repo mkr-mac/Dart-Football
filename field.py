@@ -1,5 +1,6 @@
 from image import Image
 from sound import Sound
+from text import Text
 from scoreboard import Scoreboard
 
 ##This class mostly exists for  A E S T E T I C  reasons
@@ -9,6 +10,7 @@ class Field:
 		self.ground_image_url = 'field.png'
 		self.ground_image = Image(self.ground_image_url, 0, 0)
 		self.scoreboard = Scoreboard()
+		self.font = 'scoreboardfont.ttf'
 		self.yardline = Text("0", 360, 360, self.font, 56, (255,255,255))
 		self.drawables = [self.ground_image, self.yardline, self.scoreboard]
 		self.game_history = []

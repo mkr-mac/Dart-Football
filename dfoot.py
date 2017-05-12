@@ -4,8 +4,8 @@ from pygame.locals import *
 import pygame, sys, os, time, threading
 
 #Screen size constants
-SCREENWIDTH = 320
-SCREENHEIGHT = 240
+SCREENWIDTH = 720
+SCREENHEIGHT = 480
 FULLSCREEN = False
 
 def quit():
