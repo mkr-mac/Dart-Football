@@ -12,17 +12,21 @@ class GPIO_Controller:
 		
 	def poll(self):
 		ports_on = []
-		
+		b=0
 		#Charlieplex Scanning, only needs 10 ports
 		for i in self.range_ten:
+			if b:
+				break
 			GPIO.setup(self.input_ports[i], GPIO.OUT, initial=GPIO.LOW)
 			for j in self.range_ten:
-				try:
-					if (not i == j) and (not GPIO.input(j)):
-						print GPIO.input(j)
+				if (not i == j):
+					b=0
+					b = not GPIO.input(self.input_ports[j])
+						
+					if b:
 						ports_on = [i, j]
-				except:
-					print ("Could not get input")
+						break
+
 			GPIO.setup(self.input_ports[i], GPIO.IN, pull_up_down = GPIO.PUD_UP)
 		"""
 		#For 19 input port scanning
@@ -35,6 +39,6 @@ class GPIO_Controller:
 				pass
 
 		"""
-		print ports_on		
+		
 		return ports_on
 		

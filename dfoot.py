@@ -32,8 +32,7 @@ else:
 
 pygame.display.set_caption("Dart Football")
 
-input_ports = [4, 17, 27, 11, 5, 6, 13, 19, 26,
-				18, 23, 24, 25, 8, 7, 12, 16, 20, 21]
+input_ports = [4, 17, 9, 5, 13, 26, 21, 16, 12, 8]
 				
 action_chart = [[1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
 				[-1, -2, -3, -4, -5, -6, -7, -8, -9, -10],
@@ -54,6 +53,8 @@ t = threading.Thread(target=port_scan, args = ())
 t.daemon = True
 t.start()
 
+field.draw(DS)
+
 while True:
 	action = None
 
@@ -70,8 +71,8 @@ while True:
 		p = []
 		
 	for n in range(0, len(p)-1):
-		if p[n] < 9 and p[n+1] >= 9 and p[n+1] < 19:
-			action = action_chart[p[n]][p[n+1]-10]
+		if p[n] < 10 and not(p[n] == p[n+1]):
+			action = action_chart[p[n]][p[n+1]]
 			print ("action = " + str(action))
 			thread_stop = True
 			time.sleep(.01)
