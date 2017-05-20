@@ -27,9 +27,9 @@ class Scoreboard:
 		self.away_name = Text("AWAY", 382, 32, self.font, 24, (255,255,255))
 		self.home_score_text = Text(str(self.home_score), 45, 95, self.font, 36, (255,255,255))
 		self.away_score_text = Text(str(self.away_score), 425, 95, self.font, 36, (255,255,255))
-		self.down_and_to_go = Text(str(self.down) + "RD & " + str(self.yardline), 170, 210, self.font, 24, (0,0,0))
+		self.down_and_to_go = Text(str(self.down) + "ST & " + str(self.first_down_to_go), 170, 210, self.font, 24, (0,0,0))
 		self.half_text = Text(str(self.half)+"ST", 222, 120, self.font, 24, (255,255,255))
-		self.possession_indicator = Image('possession_indicator.png', 225, 44)
+		self.possession_indicator = Image('possession_indicator.png', 315, 130)
 		
 		self.drawables = [self.board_image, self.home_name, self.away_name,  
 							self.home_score_text, self.away_score_text, self.down_and_to_go,
@@ -121,40 +121,6 @@ class Scoreboard:
 		if self.possession == 'away':
 			gain = -gain
 		return gain
-		
-	def score(self, gain):
-		if self.yardline >= 100:
-			if gain > 0:
-				if self.possession == 'home':
-					self.home_score += 6
-				elif self.possession == 'away':
-					self.away_score += 6
-				self.yardline = 98
-				self.game_state = 'XP'
-			else:
-				if self.possession == 'home':
-					self.away_score += 2
-				elif self.possession == 'away':
-					self.home_score += 2
-				self.yardline = 35
-				self.turnover()
-				self.first_down()
-		if self.yardline <= 0:
-			if gain < 0:
-				if self.possession == 'home':
-					self.home_score += 6
-				elif self.possession == 'away':
-					self.away_score += 6
-				self.yardline = 2
-				self.game_state = 'XP'
-			else:
-				if self.possession == 'home':
-					self.away_score += 2
-				elif self.possession == 'away':
-					self.home_score += 2
-				self.yardline = 65
-				self.turnover()
-				self.first_down()
 	
 	def check_first_down(self, gain):
 		if self.yardline >= self.first_down_yardline and gain > 0:
@@ -193,6 +159,42 @@ class Scoreboard:
 			#punt.wmv
 			self.game_state = 'punt'
 			self.cooldown = 3
+
+	def score(self, gain):
+		if self.yardline >= 100:
+			if gain > 0:
+				if self.possession == 'home':
+					self.home_score += 6
+				elif self.possession == 'away':
+					self.away_score += 6
+				self.yardline = 98
+				self.game_state = 'XP'
+			else:
+				if self.possession == 'home':
+					self.away_score += 2
+				elif self.possession == 'away':
+					self.home_score += 2
+				self.yardline = 35
+				self.turnover()
+				self.first_down()
+				self.check_half()
+		elif self.yardline <= 0:
+			if gain < 0:
+				if self.possession == 'home':
+					self.home_score += 6
+				elif self.possession == 'away':
+					self.away_score += 6
+				self.yardline = 2
+				self.game_state = 'XP'
+			else:
+				if self.possession == 'home':
+					self.away_score += 2
+				elif self.possession == 'away':
+					self.home_score += 2
+				self.yardline = 65
+				self.turnover()
+				self.first_down()
+				self.check_half()
 		
 	def kick(self):
 		if self.game_state == 'normal':
@@ -226,7 +228,9 @@ class Scoreboard:
 				self.yardline = 75
 			self.turnover()
 			self.game_state = 'normal'
-		
+
+		self.check_half()
+
 	def no_notgood(self):
 		if self.game_state == 'kick':
 			#nogood.mp4
@@ -240,6 +244,8 @@ class Scoreboard:
 				self.yardline = 75
 			self.turnover()
 			self.game_state = 'normal'
+
+		self.check_half()
 	
 	def interception(self):
 		self.turnover()
@@ -257,6 +263,11 @@ class Scoreboard:
 			self.yardline = 20
 			
 		self.first_down()
+		
+	def check_half(self):
+		if self.home_score > 10 or self.away_score > 10:
+			#TODO: Halftime things
+			pass
 		
 	def fumble(self):
 		self.turnover()
@@ -302,7 +313,7 @@ class Scoreboard:
 	def update(self):
 		self.home_score_text.set_text(str(self.home_score))
 		self.away_score_text.set_text(str(self.away_score))
-		if self.game_state == "PAT":
+		if self.game_state == "XP":
 			self.down_and_to_go.set_text("POINT AFTER ATTEMPT")
 		elif self.down == 1:
 			self.down_and_to_go.set_text(str(self.down) + " ST & " + str(self.first_down_to_go))
@@ -322,8 +333,10 @@ class Scoreboard:
 		else:
 			self.half_text.set_text(str(self.half)+" NO")
 
-
-		self.possession_indicator.set_pos(225, 44)
+		if self.possession == 'home':
+			self.possession_indicator.set_pos(315, 130)
+		else:
+			self.possession_indicator.set_pos(210, 130)
 		
 	def draw(self, DS):
 		for o in self.drawables:
