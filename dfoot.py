@@ -15,11 +15,11 @@ def quit():
 def port_scan():
 	global ports_on
 	gp = GPIO_Controller(input_ports)
-	ports_on = []
+	ports_on = [11,11]
 
 	while True:
 		if not thread_stop:
-			ports_on += gp.poll()
+			ports_on = gp.poll()
 		
 #Start Pygame
 pygame.init()
@@ -32,8 +32,10 @@ else:
 
 pygame.display.set_caption("Dart Football")
 
+#The GPIO ports in use by the Pi
 input_ports = [4, 17, 9, 5, 13, 26, 21, 16, 12, 8]
-				
+
+#The action lookup chart				
 action_chart = [[1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
 				[-1, -2, -3, -4, -5, -6, -7, -8, -9, -10],
 				['touchdown', 'fumble', 'interception', 'penalty5', 'penalty5ldl', 'penalty10ldl', 'breakaway2', 'breakaway3', 0, 0],
@@ -68,19 +70,18 @@ while True:
 	try:
 		p = ports_on		
 	except:
-		p = []
+		p = [11,11]
 		
-	for n in range(0, len(p)-1):
-		if p[n] < 10 and not(p[n] == p[n+1]):
-			action = action_chart[p[n]][p[n+1]]
-			print ("action = " + str(action))
-			thread_stop = True
-			time.sleep(.01)
-			ports_on = []
-			action_delay = 23
-			break
-		else:
-			action = None
+	if p[0] < 10 and p[1] < 10:
+		action = action_chart[p[0]][p[1]]
+		print ("action = " + str(action))
+		thread_stop = True
+		time.sleep(.01)
+		ports_on = []
+		action_delay = 23
+		break
+	else:
+		action = None
 
 	if thread_stop:
 		action_delay -= 1
