@@ -35,26 +35,30 @@ pygame.display.set_caption("Dart Football")
 #The GPIO ports in use by the Pi
 input_ports = [4, 17, 9, 5, 13, 26, 21, 16, 12, 8]
 
-#The action lookup chart				
-action_chart = [[1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-				[-1, -2, -3, -4, -5, -6, -7, -8, -9, -10],
-				['touchdown', 'fumble', 'interception', 'penalty5', 'penalty5ldl', 'penalty10ldl', 'breakaway2', 'breakaway3', 0, 0],
+#The action lookup chart
+#Spots at [x][x] are unreachable		
+action_chart = [[0, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+				[-1, 0, -3, -4, -5, -6, -7, -8, -9, -10],
+				['touchdown', 0, 'fumble', 'interception', 'penalty5', 'penalty5ldl', 'penalty10ldl', 'breakaway2', 'breakaway3', 0],
 				['yellow', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 				[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 				[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 				[0, 0, 0, 0, 0, 0, 0, 0 ,0, 0],
 				[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 				['yesgood', 'nonotgood', 'kick', 'punt', 'offboard', 'undo', 0, 0, 0, 0]]
-				
-field = Field()
 
+#The playing field			
+field = Field()
+#A buffer so the
 action_delay = 0
 
+#Threading for Port Scanner
 thread_stop = False
 t = threading.Thread(target=port_scan, args = ())
 t.daemon = True
 t.start()
 
+#Draw once to get started!
 field.draw(DS)
 
 while True:

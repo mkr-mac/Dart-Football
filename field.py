@@ -33,7 +33,11 @@ class Field:
 				self.get_action(action)
 
 		self.scoreboard.update()
-		self.yardline.set_text(str(self.scoreboard.yardline))
+		
+		if self.scoreboard.yardline > 50:
+			self.yardline.set_text(str(100-self.scoreboard.yardline))
+		else:
+			self.yardline.set_text(str(self.scoreboard.yardline))
 		
 	def undo(self):
 		if save_number > 0:

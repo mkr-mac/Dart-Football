@@ -6,7 +6,7 @@ class GPIO_Controller:
 		self.input_ports = input_ports
 		GPIO.setmode(GPIO.BCM)
 		#optimisation
-		self.range_ten = range(10)
+		self.range_ten = range(len(self.input_ports))
 		for port in input_ports:
 			#Pull up all the ports
 			GPIO.setup(port, GPIO.IN, pull_up_down = GPIO.PUD_UP)
@@ -43,3 +43,4 @@ class GPIO_Controller:
 
 		return ports_on
 		"""
+		
