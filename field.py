@@ -24,6 +24,7 @@ class Field:
 			
 	def update(self, action):
 		if not action == None:
+			#save the game
 			self.game_history.append(self.scoreboard)
 			self.save_number+=1
 

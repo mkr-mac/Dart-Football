@@ -10,6 +10,7 @@ GPIO.setup(13, GPIO.IN, pull_up_down = GPIO.PUD_DOWN)
 GPIO.setup(19, GPIO.IN, pull_up_down = GPIO.PUD_DOWN)
 GPIO.setup(26, GPIO.IN, pull_up_down = GPIO.PUD_DOWN)
 i=0
+
 while True:
 	one = GPIO.input(16)
 	two = GPIO.input(20)
